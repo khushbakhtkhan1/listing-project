@@ -1,34 +1,46 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice } from '@reduxjs/toolkit';
+// As extra reducers are removed thats why actions are added below 
+const FETCH_PRODUCTS_PENDING = 'products/fetchProductsPending';
+const FETCH_PRODUCTS_FULFILLED = 'products/fetchProductsFulfilled';
+const FETCH_PRODUCTS_REJECTED = 'products/fetchProductsRejected';
 
-export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
-  const response = await axios.get('https://fakestoreapi.com/products');
-  return response.data;
-});
-
+const initialState = {
+  products: [],
+  status: 'idle', 
+  error: null,
+};
 const productSlice = createSlice({
   name: 'products',
-  initialState: {
-    products: [],
-    status: 'idle',
-    error: null,
-  },
+  initialState,
   reducers: {
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchProducts.pending, (state, action) => {
-        state.status = 'loading';
-      })
-      .addCase(fetchProducts.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.products = action.payload;
-      })
-      .addCase(fetchProducts.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      });
+    fetchProductsPending: (state) => {
+      state.status = 'loading';
+      state.error = null;
+    },
+    fetchProductsFulfilled: (state, action) => {
+      state.status = 'succeeded';
+      state.products = action.payload;
+    },
+    fetchProductsRejected: (state, action) => {
+      state.status = 'failed';
+      state.error = action.payload;
+    },
   },
 });
+
+export const { fetchProductsPending, fetchProductsFulfilled, fetchProductsRejected } = productSlice.actions;
+export const fetchProducts = () => async (dispatch) => {
+  dispatch(fetchProductsPending());
+  try {
+    const response = await fetch('https://fakestoreapi.com/products');
+    if (!response.ok) {
+      throw new Error('Failed to fetch');
+    }
+    const data = await response.json();
+    dispatch(fetchProductsFulfilled(data));
+  } catch (error) {
+    dispatch(fetchProductsRejected(error.message));
+  }
+};
 
 export default productSlice.reducer;
