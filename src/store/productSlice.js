@@ -1,34 +1,43 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice } from '@reduxjs/toolkit';
+import { ToastContainer, toast } from 'react-toastify'; 
+import 'react-toastify/dist/ReactToastify.css';
 
-export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
-  const response = await axios.get('https://fakestoreapi.com/products');
-  return response.data;
-});
-
+const initialState = {
+  products: [],
+  status: 'idle'
+};
 const productSlice = createSlice({
   name: 'products',
-  initialState: {
-    products: [],
-    status: 'idle',
-    error: null,
-  },
+  initialState,
   reducers: {
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchProducts.pending, (state, action) => {
-        state.status = 'loading';
-      })
-      .addCase(fetchProducts.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.products = action.payload;
-      })
-      .addCase(fetchProducts.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      });
+    fetchProductsPending: (state) => {
+      state.status = 'loading';
+    },
+    fetchProductsFulfilled: (state, action) => {
+      state.status = 'succeeded';
+      state.products = action.payload;
+    },
+    fetchProductsRejected: (state, action) => {
+      state.status = 'failed';
+    },
   },
 });
+
+export const { fetchProductsPending, fetchProductsFulfilled, fetchProductsRejected } = productSlice.actions;
+export const fetchProducts = () => async (dispatch) => {
+  dispatch(fetchProductsPending());
+  try {
+    const response = await fetch('https://fakestoreapi.com/products');
+    if (response.status >= 400 && response.status <= 600) {
+      throw new Error('Failed to fetch :' + response.status);
+    }
+    const data = await response.json();
+    dispatch(fetchProductsFulfilled(data));
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    dispatch(fetchProductsRejected());
+    toast.error('Error fetching products');
+  }
+};
 
 export default productSlice.reducer;
