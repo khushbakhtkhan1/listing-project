@@ -9,17 +9,11 @@ export default function HomePage() {
 const dispatch = useDispatch();
 const products = useSelector(state => state.products.products);
 const status = useSelector(state => state.products.status);
-const error = useSelector(state => state.products.error);
 
 useEffect(() => {
   dispatch(fetchProducts());
 }, [dispatch]);
 
-useEffect(() => {
-  if (status === 'failed') {
-    toast.error(`Error: ${error}`); 
-  }
-}, [status, error]);
 
 return (
   <>

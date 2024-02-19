@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Typography, Card, CardContent, CardMedia, Box } from '@mui/material';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
+import BASE_URL from './config';
 
 const ProductDetails = () => {
   const [product, setProduct] = useState(null);
@@ -14,9 +15,9 @@ const ProductDetails = () => {
     const fetchData = async () => {
       try {
         if (id) {
-          const response = await fetch(`https://fakestoreapi.com/products/${id}`);
-          if (!response.ok) {
-            throw new Error('Response was not ok');
+          const response = await fetch(`${BASE_URL}/products/${id}`);
+          if (response.status >= 400 && response.status <= 600) {
+            throw new Error('Request failed with status: ' + response.status);
           }
           const data = await response.json();
           if (!data || Object.keys(data).length === 0) {
@@ -41,7 +42,7 @@ const ProductDetails = () => {
   }
 
   if (!product) {
-    return null;
+    return <p>Product not Found</p>;
     
   }
 
