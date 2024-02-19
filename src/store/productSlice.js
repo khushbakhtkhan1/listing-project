@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-// As extra reducers are removed thats why actions are added below 
+// Extra reducers are removed thats why actions are added below 
 const FETCH_PRODUCTS_PENDING = 'products/fetchProductsPending';
 const FETCH_PRODUCTS_FULFILLED = 'products/fetchProductsFulfilled';
 const FETCH_PRODUCTS_REJECTED = 'products/fetchProductsRejected';

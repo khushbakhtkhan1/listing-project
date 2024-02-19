@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import ProductList from '../components/ProductList';
+import ProductList from './ProductList';
 import { fetchProducts } from '../store/productSlice';
 import { ToastContainer, toast } from 'react-toastify'; // Import ToastContainer and toast
-import 'react-toastify/dist/ReactToastify.css'; // Import Toastify styles
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function HomePage() {
 const dispatch = useDispatch();
@@ -17,7 +17,7 @@ useEffect(() => {
 
 useEffect(() => {
   if (status === 'failed') {
-    toast.error(`Error: ${error}`); // Display error toast if status is 'failed'
+    toast.error(`Error: ${error}`); 
   }
 }, [status, error]);
 

@@ -2,6 +2,7 @@ import { Provider } from 'react-redux';
 import { store } from '../store/store'; 
 import { CssBaseline } from '@mui/material';
 import Head from 'next/head';
+import { ToastContainer } from 'react-toastify';
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -12,6 +13,7 @@ function MyApp({ Component, pageProps }) {
     
     <Provider store={store}>
       <CssBaseline />
+      <ToastContainer />
       <Component {...pageProps} />
     </Provider>
     </>
