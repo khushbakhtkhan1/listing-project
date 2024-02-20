@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Typography, Card, CardContent, CardMedia, Box } from '@mui/material';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
-import BASE_URL from './config';
+import BASE_URL from '../config';
 
 const ProductDetails = () => {
   const [product, setProduct] = useState(null);
@@ -24,7 +24,7 @@ const ProductDetails = () => {
             throw new Error('Product is not available');
           }
           setProduct(data);
-          
+
         }
       } catch (error) {
         console.error('Error fetching product details:', error);
@@ -43,7 +43,7 @@ const ProductDetails = () => {
 
   if (!product) {
     return <p>Product not Found</p>;
-    
+
   }
 
   return (
