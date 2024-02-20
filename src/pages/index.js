@@ -1,15 +1,25 @@
-import ProductList from '../components/ProductList';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import ProductList from './ProductList';
+import { fetchProducts } from '../store/productSlice';
+import { ToastContainer, toast } from 'react-toastify'; // Import ToastContainer and toast
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function HomePage() {
-  const [products, setProducts] = useState([]);
+const dispatch = useDispatch();
+const products = useSelector(state => state.products.products);
+const status = useSelector(state => state.products.status);
 
-  useEffect(() => {
-    axios.get('https://fakestoreapi.com/products')
-      .then(response => setProducts(response.data))
-      .catch(error => console.error('Error fetching products:', error));
-  }, []);
+useEffect(() => {
+  dispatch(fetchProducts());
+}, [dispatch]);
 
-  return <ProductList products={products} />;
+
+return (
+  <>
+    <ToastContainer /> {/* Render ToastContainer */}
+    {status === 'loading' && <p>Loading...</p>}
+    {status === 'succeeded' && <ProductList products={products} />}
+  </>
+);
 }
