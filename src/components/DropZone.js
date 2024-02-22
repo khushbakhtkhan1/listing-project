@@ -3,6 +3,8 @@ import { useDropzone } from "react-dropzone";
 import { Box, Typography, Button, IconButton, Paper } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import Image from "next/image";
 
 const DropZone = ({ className }) => {
   const [files, setFiles] = useState([]);
@@ -78,23 +80,29 @@ const DropZone = ({ className }) => {
                     <Box
                       sx={{
                         marginRight: "10px",
-                        width: "100px",
-                        height: "100px",
                         overflow: "hidden",
                       }}
                     >
-                      <img
-                        src={file.preview}
-                        alt={file.name}
-                        style={{ width: "100%", height: "auto" }}
-                        onLoad={() => {
-                          URL.revokeObjectURL(file.preview);
-                        }}
-                      />
+                      {file.type.startsWith("image/") ? (
+                        <Image
+                          src={file.preview}
+                          alt={file.name}
+                          width={100}
+                          height={100}
+                          onLoad={() => {
+                            URL.revokeObjectURL(file.preview);
+                          }}
+                        />
+                      ) : (
+                        <InsertDriveFileIcon sx={{ fontSize: 85 }} />
+                      )}
                     </Box>
-                    <Typography variant="body1" sx={{ flexGrow: 1 }}>
-                      {file.name}
-                    </Typography>
+                    <Box>
+                      <Typography variant="body1">{file.name}</Typography>
+                      <Typography variant="body2">
+                        {Math.round(file.size / 1024)} KB
+                      </Typography>
+                    </Box>
                     <IconButton
                       onClick={() => removeFile(file.name)}
                       color="error"
