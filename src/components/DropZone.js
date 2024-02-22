@@ -94,7 +94,7 @@ const DropZone = ({ className }) => {
                           }}
                         />
                       ) : (
-                        <InsertDriveFileIcon sx={{ fontSize: 85 }} />
+                        <InsertDriveFileIcon sx={{ fontSize: 100 }} />
                       )}
                     </Box>
                     <Box>
